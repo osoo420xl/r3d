@@ -342,7 +342,7 @@ const PathwaysSection = () => {
               </div>
               
               <div className="ml-8 space-y-2">
-                <div className="text-gray-300">if (customer.interest === "high") {</div>
+                <div className="text-gray-300">if (customer.interest === &quot;high&quot;) {'{'}</div>
                 <div className="ml-4 text-gray-300">schedule_meeting();</div>
                 <div className="text-gray-300">} else {</div>
                 <div className="ml-4 text-gray-300">send_followup_email();</div>
