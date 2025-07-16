@@ -93,14 +93,14 @@ const ScriptBuilder = ({ user, onLogout }) => {
   const [scripts, setScripts] = useState([
     {
       id: 1,
-      name: 'Sales Qualification',
-      description: 'Qualify leads and book meetings',
+      name: 'B2B Sales Qualification',
+      description: 'Comprehensive lead qualification script for enterprise sales',
       type: 'Sales',
       status: 'active',
-      usedBy: 2,
+      usedBy: 3,
       successRate: 78,
       lastModified: '2 hours ago',
-      content: `Hi, this is Sarah from Bland AI. I'm calling because you showed interest in our AI calling solution. Do you have a quick minute to chat about how we can help automate your sales calls?
+      content: `Hi, this is Sarah calling from [Company Name]. I'm reaching out because you expressed interest in our AI calling solution through our website. Do you have a quick minute to chat about how we can help automate your sales calls and improve your team's productivity?
 
 [WAIT FOR RESPONSE]
 
@@ -108,24 +108,32 @@ Great! I'd love to learn more about your current sales process. How many outboun
 
 [LISTEN FOR OBJECTIONS]
 
-If "not interested": I understand you might not be looking for a solution right now. Can I ask what your biggest challenge is with your current sales process?
+If "not interested": I understand you might not be looking for a solution right now. Can I ask what your biggest challenge is with your current sales process? Many of our clients were in a similar situation before they discovered how much time AI can save.
 
-If "too busy": I completely understand - that's exactly why our AI solution could be valuable. It handles the time-consuming prospecting calls so your team can focus on closing deals. Would you be open to a 15-minute demo next week?
+If "too busy": I completely understand - that's exactly why our AI solution could be valuable. It handles the time-consuming prospecting calls so your team can focus on closing deals. Would you be open to a quick 15-minute demo next week?
+
+If "already have solution": That's great that you have something in place! I'm curious - are you completely satisfied with your current results? Our clients typically see a 40% improvement in conversion rates when they switch to our AI system.
 
 [BOOK MEETING]
 
-Perfect! I have some time available on Tuesday at 2 PM or Wednesday at 10 AM. Which works better for you?`
+Perfect! I have some time available on Tuesday at 2 PM or Wednesday at 10 AM. Which works better for you?
+
+[CONFIRM DETAILS]
+
+Excellent! I'll send you a calendar invite with all the details. Is there anything specific you'd like me to focus on during our demo?
+
+Thank you for your time today, and I look forward to speaking with you soon!`
     },
     {
       id: 2,
-      name: 'Customer Support',
-      description: 'Handle basic support inquiries',
+      name: 'Customer Support Triage',
+      description: 'Handle basic support inquiries and route complex issues',
       type: 'Support',
-      status: 'draft',
-      usedBy: 1,
+      status: 'active',
+      usedBy: 2,
       successRate: 85,
       lastModified: '1 day ago',
-      content: `Hello! Thanks for calling Bland AI support. I'm here to help you with any questions about our AI calling platform.
+      content: `Hello! Thanks for calling [Company Name] support. I'm here to help you with any questions about our service.
 
 [WAIT FOR ISSUE]
 
@@ -133,13 +141,83 @@ I understand you're having trouble with [ISSUE]. Let me help you resolve this ri
 
 [TROUBLESHOOTING STEPS]
 
-If technical issue: Let me walk you through some troubleshooting steps...
-If billing question: I can help you with billing questions...
-If feature request: That's great feedback! I'll make sure to pass that along...
+If technical issue: Let me walk you through some troubleshooting steps. First, can you tell me what device you're using and what exactly is happening?
+
+If billing question: I can help you with billing questions. Let me pull up your account information. Can you please provide your account email address?
+
+If feature request: That's great feedback! I'll make sure to pass that along to our development team. Can you tell me more about what you're trying to accomplish?
+
+If complex issue: This sounds like something our technical team should handle directly. Let me transfer you to one of our specialists who can give you the detailed help you need.
 
 [RESOLUTION]
 
-Is there anything else I can help you with today?`
+Is there anything else I can help you with today? I want to make sure you're completely satisfied with our service.
+
+[FOLLOW-UP]
+
+Great! I'm going to send you a follow-up email with a summary of what we discussed and any next steps. Have a wonderful day!`
+    },
+    {
+      id: 3,
+      name: 'Warm Lead Follow-up',
+      description: 'Nurture warm leads and move them through the sales funnel',
+      type: 'Follow-up',
+      status: 'active',
+      usedBy: 2,
+      successRate: 92,
+      lastModified: '3 days ago',
+      content: `Hi there! This is Emma calling from [Company Name]. I'm following up on our previous conversation about our AI calling solution. I hope you've had a chance to think about how it could help your business!
+
+[WAIT FOR RESPONSE]
+
+That's wonderful! I'm excited to continue our conversation. Based on what you mentioned last time about [SPECIFIC PAIN POINT], I think our solution could really help streamline your sales process and save your team valuable time.
+
+[ADDRESS CONCERNS]
+
+If still interested: Fantastic! I'd love to schedule a demo to show you exactly how it works. I can show you some real examples of how companies like yours have improved their results. What does your calendar look like this week?
+
+If need more time: I completely understand - this is an important decision for your business. Can I send you some additional information that might help? What specific questions do you have?
+
+If budget concerns: I appreciate you being upfront about the budget. Let me ask you this - what would it be worth to your business if you could increase your sales team's productivity by 40%? That's what our average client sees.
+
+[NEXT STEPS]
+
+Perfect! I'll get that set up for you right away. You're going to love what we can do for your business. I'll send you the meeting details within the next hour.
+
+[CLOSING]
+
+Thanks so much for your time today. I'm really looking forward to showing you how this can transform your sales process!`
+    },
+    {
+      id: 4,
+      name: 'Appointment Reminder',
+      description: 'Remind customers about upcoming appointments',
+      type: 'Reminder',
+      status: 'draft',
+      usedBy: 1,
+      successRate: 95,
+      lastModified: '5 days ago',
+      content: `Hello! This is a friendly reminder from [Company Name]. You have an appointment scheduled with [AGENT NAME] tomorrow at [TIME].
+
+[WAIT FOR RESPONSE]
+
+Great! I just wanted to confirm that you'll be able to make it to your appointment tomorrow at [TIME]. We have you scheduled for [APPOINTMENT TYPE].
+
+[CONFIRMATION]
+
+If confirmed: Perfect! We'll see you tomorrow at [TIME]. The meeting will be [VIRTUAL/IN-PERSON] and should take about [DURATION]. 
+
+If needs to reschedule: No problem at all! What day and time would work better for you? I can check our calendar and find a time that works.
+
+If questions: I'd be happy to answer any questions you have about tomorrow's meeting. What can I help clarify?
+
+[DETAILS]
+
+Just as a reminder, [AGENT NAME] will be covering [TOPICS] and will have some great insights to share with you about [RELEVANT TOPIC].
+
+[CLOSING]
+
+Thanks for confirming! We're looking forward to speaking with you tomorrow. Have a great rest of your day!`
     }
   ]);
 
