@@ -321,6 +321,11 @@ Thanks for confirming! We're looking forward to speaking with you tomorrow. Have
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{script.lastModified}</span>
                   <div className="flex items-center space-x-2">
+                    <VoicePreview 
+                      text={script.content}
+                      voice="Sarah"
+                      className="scale-75"
+                    />
                     <button
                       onClick={() => handleEditScript(script)}
                       className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
