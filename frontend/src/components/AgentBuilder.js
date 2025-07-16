@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import VoicePreview from './VoicePreview';
 import { 
   Plus, 
   Bot, 
@@ -32,7 +33,8 @@ import {
   Users,
   ArrowRight,
   Lightbulb,
-  Sparkles
+  Sparkles,
+  Activity
 } from 'lucide-react';
 
 // Sidebar Component (reused from Dashboard)
@@ -134,6 +136,14 @@ const AgentCard = ({ agent, onEdit, onDelete, onClone, onToggle }) => {
         </div>
       </div>
       
+      <div className="mb-4">
+        <VoicePreview 
+          text={agent.script || "Hi, this is " + agent.name + " calling from your company. I'm reaching out to discuss how we can help improve your business operations. Do you have a few minutes to chat?"}
+          voice={agent.voice}
+          className="mb-2"
+        />
+      </div>
+      
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Globe className="w-4 h-4 text-gray-400" />
@@ -211,8 +221,45 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
         transferNumber: agent.transferNumber || '',
         webhook: agent.webhook || ''
       });
+    } else {
+      // Reset form for new agent
+      setFormData({
+        name: '',
+        description: '',
+        language: 'English',
+        voice: 'Sarah',
+        personality: 'Professional',
+        goal: 'Schedule Meeting',
+        script: `Hi, this is Sarah calling from [Company Name]. I'm reaching out because you expressed interest in our AI calling solution. 
+
+Do you have a quick minute to chat about how we can help automate your sales calls and improve your team's productivity?
+
+[WAIT FOR RESPONSE]
+
+Great! I'd love to learn more about your current sales process. How many outbound calls does your team typically make per week?
+
+[LISTEN FOR OBJECTIONS]
+
+If "not interested": I understand you might not be looking for a solution right now. Can I ask what your biggest challenge is with your current sales process?
+
+If "too busy": I completely understand - that's exactly why our AI solution could be valuable. It handles the time-consuming prospecting calls so your team can focus on closing deals. Would you be open to a quick 15-minute demo next week?
+
+[BOOK MEETING]
+
+Perfect! I have some time available on Tuesday at 2 PM or Wednesday at 10 AM. Which works better for you?
+
+[CONFIRM DETAILS]
+
+Excellent! I'll send you a calendar invite with all the details. Is there anything specific you'd like me to focus on during our demo?
+
+Thank you for your time today, and I look forward to speaking with you soon!`,
+        maxCallTime: 300,
+        retryAttempts: 3,
+        transferNumber: '',
+        webhook: ''
+      });
     }
-  }, [agent]);
+  }, [agent, isOpen]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -220,9 +267,9 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
       ...formData,
       id: agent?.id || Date.now(),
       status: 'inactive',
-      callsToday: 0,
-      successRate: 0,
-      avgCallTime: 0,
+      callsToday: agent?.callsToday || 0,
+      successRate: agent?.successRate || 0,
+      avgCallTime: agent?.avgCallTime || 0,
       createdAt: new Date().toISOString()
     });
     onClose();
@@ -237,12 +284,11 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
   ];
 
   const voiceOptions = [
-    'Sarah (Female, Professional)',
-    'John (Male, Friendly)',
-    'Emma (Female, Warm)',
-    'David (Male, Authoritative)',
-    'Lisa (Female, Energetic)',
-    'Custom Voice Clone'
+    'Sarah',
+    'John', 
+    'Emma',
+    'David',
+    'Lisa'
   ];
 
   const personalityOptions = [
@@ -365,7 +411,7 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {voiceOptions.map((voice) => (
-                    <option key={voice} value={voice.split(' ')[0]}>
+                    <option key={voice} value={voice}>
                       {voice}
                     </option>
                   ))}
@@ -373,19 +419,10 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
               </div>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Lightbulb className="w-5 h-5 text-blue-600" />
-                  <p className="text-sm font-medium text-blue-900">Voice Cloning</p>
-                </div>
-                <p className="text-sm text-blue-700">
-                  Want to use your own voice? Upload a 5-minute audio sample to create a custom voice clone.
-                </p>
-                <button
-                  type="button"
-                  className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  Upload Voice Sample
-                </button>
+                <VoicePreview 
+                  text="Hi, this is a sample of how I sound. I'm your AI calling agent ready to help with your business needs."
+                  voice={formData.voice}
+                />
               </div>
             </div>
           )}
@@ -473,25 +510,16 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
                   value={formData.script}
                   onChange={(e) => setFormData({ ...formData, script: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  rows="6"
-                  placeholder="Hi, this is [Agent Name] from [Company]. I'm calling about..."
+                  rows="8"
+                  placeholder="Enter your agent's conversation script..."
                 />
               </div>
               
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Sparkles className="w-5 h-5 text-green-600" />
-                  <p className="text-sm font-medium text-green-900">AI Script Builder</p>
-                </div>
-                <p className="text-sm text-green-700">
-                  Need help writing your script? Our AI can generate a professional script based on your goals.
-                </p>
-                <Link
-                  to="/script-builder"
-                  className="mt-2 text-sm text-green-600 hover:text-green-700 font-medium"
-                >
-                  Use Script Builder
-                </Link>
+                <VoicePreview 
+                  text={formData.script}
+                  voice={formData.voice}
+                />
               </div>
             </div>
           )}
@@ -510,9 +538,6 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="+1 (555) 123-4567"
                 />
-                <p className="text-sm text-gray-500 mt-1">
-                  Number to transfer calls to when agent can't handle the request
-                </p>
               </div>
               
               <div>
@@ -526,33 +551,6 @@ const AgentBuilderModal = ({ isOpen, onClose, agent, onSave }) => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="https://your-website.com/webhook"
                 />
-                <p className="text-sm text-gray-500 mt-1">
-                  Receive real-time call data and results
-                </p>
-              </div>
-              
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Popular Integrations</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center space-x-3 p-3 bg-white rounded-lg">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <span className="text-green-600 font-bold text-sm">G</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Google Sheets</p>
-                      <p className="text-xs text-gray-500">Save call data</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 bg-white rounded-lg">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600 font-bold text-sm">N</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Notion</p>
-                      <p className="text-xs text-gray-500">CRM integration</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           )}
@@ -604,34 +602,95 @@ const AgentBuilder = ({ user, onLogout }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    // Load sample agents
+    // Load realistic sample agents
     const sampleAgents = [
       {
         id: 1,
-        name: 'Sales Bot',
-        description: 'Handles lead qualification and appointment setting',
+        name: 'Sarah - Sales Expert',
+        description: 'Handles B2B lead qualification and appointment setting with a professional approach',
         language: 'English',
         voice: 'Sarah',
         personality: 'Professional',
         goal: 'Schedule Meeting',
         status: 'active',
-        callsToday: 23,
+        callsToday: 47,
         successRate: 78,
         avgCallTime: 4.2,
+        script: `Hi, this is Sarah calling from [Company Name]. I'm reaching out because you expressed interest in our AI calling solution. Do you have a quick minute to chat about how we can help automate your sales calls and improve your team's productivity?
+
+[WAIT FOR RESPONSE]
+
+Great! I'd love to learn more about your current sales process. How many outbound calls does your team typically make per week?
+
+[LISTEN FOR OBJECTIONS]
+
+If "not interested": I understand you might not be looking for a solution right now. Can I ask what your biggest challenge is with your current sales process?
+
+If "too busy": I completely understand - that's exactly why our AI solution could be valuable. It handles the time-consuming prospecting calls so your team can focus on closing deals. Would you be open to a quick 15-minute demo next week?
+
+[BOOK MEETING]
+
+Perfect! I have some time available on Tuesday at 2 PM or Wednesday at 10 AM. Which works better for you?`,
         createdAt: new Date().toISOString()
       },
       {
         id: 2,
-        name: 'Support Agent',
-        description: 'Provides customer support and troubleshooting',
+        name: 'John - Customer Support',
+        description: 'Provides friendly customer support and handles basic troubleshooting inquiries',
         language: 'English',
         voice: 'John',
         personality: 'Friendly',
         goal: 'Customer Support',
-        status: 'paused',
-        callsToday: 12,
+        status: 'active',
+        callsToday: 32,
         successRate: 85,
         avgCallTime: 6.1,
+        script: `Hello! Thanks for calling [Company Name] support. I'm John, and I'm here to help you with any questions about our service.
+
+[WAIT FOR ISSUE]
+
+I understand you're having trouble with [ISSUE]. Let me help you resolve this right away.
+
+[TROUBLESHOOTING STEPS]
+
+If technical issue: Let me walk you through some troubleshooting steps. First, can you tell me what device you're using?
+
+If billing question: I can help you with billing questions. Let me pull up your account information.
+
+If feature request: That's great feedback! I'll make sure to pass that along to our development team.
+
+[RESOLUTION]
+
+Is there anything else I can help you with today? I want to make sure you're completely satisfied with our service.`,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 3,
+        name: 'Emma - Follow-up Specialist',
+        description: 'Handles warm follow-up calls and nurtures leads with an enthusiastic approach',
+        language: 'English',
+        voice: 'Emma',
+        personality: 'Enthusiastic',
+        goal: 'Follow-up Call',
+        status: 'paused',
+        callsToday: 28,
+        successRate: 92,
+        avgCallTime: 3.8,
+        script: `Hi there! This is Emma calling from [Company Name]. I'm following up on our previous conversation about our AI calling solution. I hope you've had a chance to think about how it could help your business!
+
+[WAIT FOR RESPONSE]
+
+That's wonderful! I'm excited to continue our conversation. Based on what you mentioned last time, I think our solution could really help streamline your sales process.
+
+[ADDRESS CONCERNS]
+
+If still interested: Fantastic! I'd love to schedule a demo to show you exactly how it works. What does your calendar look like this week?
+
+If need more time: I completely understand - this is an important decision. Can I send you some additional information that might help? What specific questions do you have?
+
+[NEXT STEPS]
+
+Perfect! I'll get that set up for you right away. You're going to love what we can do for your business!`,
         createdAt: new Date().toISOString()
       }
     ];
