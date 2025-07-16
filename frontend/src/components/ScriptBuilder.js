@@ -229,6 +229,26 @@ Thanks for confirming! We're looking forward to speaking with you tomorrow. Have
 
   const handleNewScript = () => {
     setEditingScript(null);
+    setScriptContent(`Hi, this is [Agent Name] calling from [Company Name]. I'm reaching out because [REASON FOR CALL].
+
+[WAIT FOR RESPONSE]
+
+Great! I'd love to learn more about [TOPIC]. Can you tell me about [SPECIFIC QUESTION]?
+
+[LISTEN FOR OBJECTIONS]
+
+If "not interested": I understand you might not be looking for a solution right now. Can I ask what your biggest challenge is with [RELEVANT AREA]?
+
+If "too busy": I completely understand - that's exactly why [SOLUTION] could be valuable. It [BENEFIT]. Would you be open to a quick call next week?
+
+[NEXT STEPS]
+
+Perfect! I have some time available on [DAY] at [TIME]. Which works better for you?
+
+[CLOSING]
+
+Thank you for your time today. I look forward to speaking with you soon!`);
+    setSelectedVoice('Sarah');
     setShowEditor(true);
   };
 
