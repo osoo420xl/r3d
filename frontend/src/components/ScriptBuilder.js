@@ -234,6 +234,7 @@ Thanks for confirming! We're looking forward to speaking with you tomorrow. Have
 
   const handleEditScript = (script) => {
     setEditingScript(script);
+    setScriptContent(script.content);
     setShowEditor(true);
   };
 
