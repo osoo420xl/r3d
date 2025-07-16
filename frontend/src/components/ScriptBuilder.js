@@ -223,6 +223,8 @@ Thanks for confirming! We're looking forward to speaking with you tomorrow. Have
 
   const [showEditor, setShowEditor] = useState(false);
   const [editingScript, setEditingScript] = useState(null);
+  const [scriptContent, setScriptContent] = useState('');
+  const [selectedVoice, setSelectedVoice] = useState('Sarah');
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleNewScript = () => {
